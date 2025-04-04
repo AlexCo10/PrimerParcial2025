@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Matrículas</title>
+    <style>
+        /* Reset de estilos básicos */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            padding: 20px;
+        }
+
+        /* Contenedor principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Encabezado */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            color: #4CAF50;
+        }
+
+        /* Menú principal */
+        .main-menu {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        /* Tarjetas del menú */
+        .menu-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 280px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Títulos de las tarjetas */
+        .menu-card h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        /* Descripción de las tarjetas */
+        .menu-card p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        /* Botón */
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Sistema de Gestión de Matrículas</h1>
+        </header>
+
+        <div class="main-menu">
+            <div class="menu-card">
+                <h2>Estudiantes</h2>
+                <p>Gestione la información de los estudiantes, vea sus detalles y asigne asignaturas.</p>
+                <button class="btn" onclick="navigateTo('estudiantes.html')">Ir a Estudiantes</button>
+            </div>
+
+            <div class="menu-card">
+                <h2>Asignaturas</h2>
+                <p>Administre el catálogo de asignaturas, cree nuevas y vea los estudiantes matriculados.</p>
+                <button class="btn" onclick="navigateTo('asignaturas.html')">Ir a Asignaturas</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para navegar a otras páginas (simula el cambio de ruta)
+        function navigateTo(page) {
+            window.location.href = page; // Redirige al usuario a la página indicada
+        }
+    </script>
+</body>
+</html>

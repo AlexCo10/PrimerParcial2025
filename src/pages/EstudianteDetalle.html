@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Estudiante</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        /* Encabezado */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            font-size: 18px;
+            color: #4CAF50;
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Detalle del estudiante */
+        .student-detail h2 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .student-info p {
+            font-size: 18px;
+            margin: 8px 0;
+            color: #555;
+        }
+
+        .student-info strong {
+            color: #4CAF50;
+        }
+
+        /* Lista de asignaturas */
+        .subjects-list {
+            margin-top: 40px;
+        }
+
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .list-body {
+            margin-top: 20px;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .list-item-info {
+            flex: 1;
+        }
+
+        .list-item-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .list-item-actions button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .list-item-actions button:hover {
+            background-color: #45a049;
+        }
+
+        .credit-counter {
+            font-size: 16px;
+            color: #888;
+        }
+
+        .credit-counter .exceeded {
+            color: red;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 450px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-modal {
+            font-size: 24px;
+            cursor: pointer;
+            color: #888;
+            background: transparent;
+            border: none;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-size: 16px;
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .form-actions button {
+            padding: 10px 15px;
+            font-size: 16px;
+        }
+
+        .form-actions button[type="button"] {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .form-actions button[type="button"]:hover {
+            background-color: #e53935;
+        }
+
+        .form-actions button[type="button"]:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Detalle del Estudiante</h1>
+        </header>
+
+        <a href="/estudiantes" class="back-link">← Volver a Estudiantes</a>
+
+        <div id="student-detail" class="student-detail">
+            <h2 id="student-name"></h2>
+            <div class="student-info" id="student-info"></div>
+
+            <div class="subjects-list">
+                <div class="list-header">
+                    <h3>Asignaturas Matriculadas</h3>
+                    <div class="credit-counter">
+                        <span id="credit-counter">Créditos Matriculados: 0/14</span>
+                    </div>
+                    <button class="btn" onclick="openModal()">Agregar Asignatura</button>
+                </div>
+
+                <div id="matriculadas-list" class="list-body">
+                    <!-- Las asignaturas matriculadas se cargarán aquí -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para agregar asignatura -->
+        <div class="modal" id="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Matricular Asignatura</h2>
+                    <button class="close-modal" onclick="closeModal()">×</button>
+                </div>
+
+                <div id="modal-body">
+                    <!-- Aquí se cargarán las asignaturas disponibles -->
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" onclick="closeModal()">Cancelar</button>
+                    <button type="button" onclick="matricularAsignatura()">Matricular</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const LIMITE_CREDITOS = 14;
+        let estudiante = null;
+        let asignaturasMatriculadas = [];
+        let asignaturasDisponibles = [];
+        let totalCreditos = 0;
+
+        // Función para cargar los datos del estudiante
+        async function loadEstudiante(codigo) {
+            // Simulación de un fetch de datos
+            estudiante = {
+                nombre: 'Juan Pérez',
+                codigo: codigo,
+                email: 'juan@example.com',
+                telefono: '123456789',
+                direccion: 'Calle Falsa 123',
+                fecha_nacimiento: '1998-01-01',
+                genero: 'Masculino',
+                programa: 'Ingeniería de Software',
+                semestre: '5'
+            };
+
+            document.getElementById('student-name').textContent = estudiante.nombre;
+            document.getElementById('student-info').innerHTML = `
+                <p><strong>Código:</strong> ${estudiante.codigo}</p>
+                <p><strong>Email:</strong> ${estudiante.email}</p>
+                <p><strong>Teléfono:</strong> ${estudiante.telefono}</p>
+                <p><strong>Dirección:</strong> ${estudiante.direccion}</p>
+                <p><strong>Fecha de Nacimiento:</strong> ${new Date(estudiante.fecha_nacimiento).toLocaleDateString()}</p>
+                <p><strong>Género:</strong> ${estudiante.genero}</p>
+                <p><strong>Programa Académico:</strong> ${estudiante.programa}</p>
+                <p><strong>Semestre:</strong> ${estudiante.semestre}</p>
+            `;
+
+            loadAsignaturasMatriculadas(codigo);
+        }
+
+        // Función para cargar asignaturas matriculadas
+        async function loadAsignaturasMatriculadas(codigo) {
+            // Simulamos la carga de asignaturas matriculadas
+            asignaturasMatriculadas = [
+                { nombre: 'Matemáticas Discretas', codigo: 'MATH101', creditos: 4 },
+                { nombre: 'Programación Orientada a Objetos', codigo: 'POO102', creditos: 5 }
+            ];
+
+            totalCreditos = asignaturasMatriculadas.reduce((total, asignatura) => total + asignatura.creditos, 0);
+            document.getElementById('credit-counter').textContent = `Créditos Matriculados: ${totalCreditos}/${LIMITE_CREDITOS}`;
+
+            const matriculadasList = document.getElementById('matriculadas-list');
+            matriculadasList.innerHTML = '';
+
+            asignaturasMatriculadas.forEach(asignatura => {
+                const div = document.createElement('div');
+                div.classList.add('list-item');
+                div.innerHTML = `
+                    <div class="list-item-info">
+                        <h3>${asignatura.nombre}</h3>
+                        <p>Código: ${asignatura.codigo} | Créditos: ${asignatura.creditos}</p>
+                    </div>
+                    <div class="list-item-actions">
+                        <button onclick="handleDesmatricular('${asignatura.codigo}')">Eliminar Matrícula</button>
+                    </div>
+                `;
+                matriculadasList.appendChild(div);
+            });
+
+            loadAsignaturasDisponibles(codigo);
+        }
+
+        // Función para cargar asignaturas disponibles
+        async function loadAsignaturasDisponibles(codigo) {
+            // Simulamos la carga de asignaturas disponibles
+            asignaturasDisponibles = [
+                { nombre: 'Algoritmos', codigo: 'ALG203', creditos: 3 },
+                { nombre: 'Base de Datos', codigo: 'BD204', creditos: 4 }
+            ];
+
+            const modalBody = document.getElementById('modal-body');
+            modalBody.innerHTML = '';
+
+            if (asignaturasDisponibles.length > 0) {
+                const select = document.createElement('select');
+                select.id = 'asignatura';
+                select.innerHTML = '<option value="">-- Seleccione --</option>';
+
+                asignaturasDisponibles.forEach(asignatura => {
+                    const option = document.createElement('option');
+                    option.value = asignatura.codigo;
+                    option.textContent = `${asignatura.nombre} (${asignatura.codigo}) - ${asignatura.creditos} créditos`;
+                    select.appendChild(option);
+                });
+
+                modalBody.appendChild(select);
+            } else {
+                modalBody.innerHTML = '<p>No hay asignaturas disponibles para matricular</p>';
+            }
+        }
+
+        // Función para abrir el modal
+        function openModal() {
+            document.getElementById('modal').classList.add('active');
+        }
+
+        // Función para cerrar el modal
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Función para matricular asignatura
+        function matricularAsignatura() {
+            const selectedAsignatura = document.getElementById('asignatura').value;
+            if (!selectedAsignatura) {
+                alert('Debe seleccionar una asignatura');
+                return;
+            }
+
+            const asignatura = asignaturasDisponibles.find(item => item.codigo === selectedAsignatura);
+            if (asignatura && totalCreditos + asignatura.creditos <= LIMITE_CREDITOS) {
+                asignaturasMatriculadas.push(asignatura);
+                totalCreditos += asignatura.creditos;
+                alert('Asignatura matriculada correctamente');
+                closeModal();
+                loadAsignaturasMatriculadas(estudiante.codigo);
+            } else {
+                alert('Excede el límite de créditos');
+            }
+        }
+
+        // Función para desmatricular asignatura
+        function handleDesmatricular(codigoAsignatura) {
+            if (confirm('¿Está seguro que desea eliminar esta matrícula?')) {
+                const index = asignaturasMatriculadas.findIndex(item => item.codigo === codigoAsignatura);
+                if (index !== -1) {
+                    asignaturasMatriculadas.splice(index, 1);
+                    totalCreditos -= asignaturasMatriculadas[index].creditos;
+                    alert('Matrícula eliminada correctamente');
+                    loadAsignaturasMatriculadas(estudiante.codigo);
+                }
+            }
+        }
+
+        // Inicializar con un código de ejemplo
+        loadEstudiante('123456');
+    </script>
+</body>
+</html>

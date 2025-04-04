@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Asignaturas</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f9;
+            color: #333;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        /* Encabezado */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            color: #4CAF50;
+        }
+
+        .back-link {
+            font-size: 16px;
+            color: #4CAF50;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        /* Lista de asignaturas */
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .list-body {
+            margin-top: 20px;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .list-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .list-item-info {
+            flex: 1;
+        }
+
+        .list-item-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .list-item-actions button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .list-item-actions button:hover {
+            background-color: #45a049;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            width: 500px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .close-modal {
+            font-size: 24px;
+            cursor: pointer;
+            color: #888;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-size: 16px;
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #4CAF50;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .form-actions button {
+            padding: 12px 25px;
+            font-size: 16px;
+        }
+
+        .form-actions button[type="button"] {
+            background-color: #f44336;
+        }
+
+        .form-actions button[type="button"]:hover {
+            background-color: #e53935;
+        }
+
+        .form-actions button[type="submit"] {
+            background-color: #4CAF50;
+        }
+
+        .form-actions button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Gestión de Asignaturas</h1>
+        </header>
+
+        <a href="/" class="back-link">← Volver al inicio</a>
+
+        <div class="list">
+            <div class="list-header">
+                <h2>Lista de Asignaturas</h2>
+                <button class="btn" onclick="openCreateModal()">Nueva Asignatura</button>
+            </div>
+
+            <div id="list-body" class="list-body">
+                <!-- Las asignaturas se cargarán aquí -->
+            </div>
+        </div>
+
+        <!-- Modal para crear/editar asignatura -->
+        <div class="modal" id="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-title">Nueva Asignatura</h2>
+                    <button class="close-modal" onclick="closeModal()">×</button>
+                </div>
+
+                <form id="form">
+                    <div class="form-group">
+                        <label for="codigo">Código</label>
+                        <input type="text" id="codigo" name="codigo" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="creditos">Créditos</label>
+                        <input type="number" id="creditos" name="creditos" min="0" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descripcion">Descripción (opcional)</label>
+                        <input type="text" id="descripcion" name="descripcion" />
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                        <button type="submit" class="btn">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let asignaturas = [];
+        let currentAsignatura = null;
+        let formMode = 'create';
+
+        // Función para cargar asignaturas
+        async function loadAsignaturas() {
+            // Simulando datos
+            asignaturas = [
+                { codigo: 'MAT101', nombre: 'Matemáticas', creditos: 5, descripcion: 'Curso de Matemáticas Básicas' },
+                { codigo: 'FIS101', nombre: 'Física', creditos: 4, descripcion: 'Curso de Física General' }
+            ];
+            renderAsignaturas();
+        }
+
+        // Función para renderizar las asignaturas
+        function renderAsignaturas() {
+            const listBody = document.getElementById('list-body');
+            listBody.innerHTML = '';
+
+            if (asignaturas.length === 0) {
+                listBody.innerHTML = '<p>No hay asignaturas registradas</p>';
+            } else {
+                asignaturas.forEach(asignatura => {
+                    const div = document.createElement('div');
+                    div.classList.add('list-item');
+                    div.innerHTML = `
+                        <div class="list-item-info">
+                            <h3>${asignatura.nombre}</h3>
+                            <p>Código: ${asignatura.codigo} | Créditos: ${asignatura.creditos}</p>
+                            ${asignatura.descripcion ? `<p>${asignatura.descripcion}</p>` : ''}
+                        </div>
+                        <div class="list-item-actions">
+                            <button class="btn" onclick="openEditModal(${JSON.stringify(asignatura)})">Editar</button>
+                            <button class="btn btn-secondary" onclick="handleDelete('${asignatura.codigo}')">Eliminar</button>
+                        </div>
+                    `;
+                    listBody.appendChild(div);
+                });
+            }
+        }
+
+        // Función para abrir el modal de creación
+        function openCreateModal() {
+            currentAsignatura = { codigo: '', nombre: '', creditos: 0, descripcion: '' };
+            formMode = 'create';
+            document.getElementById('modal-title').textContent = 'Nueva Asignatura';
+            document.getElementById('codigo').disabled = false;
+            document.getElementById('form').reset();
+            openModal();
+        }
+
+        // Función para abrir el modal de edición
+        function openEditModal(asignatura) {
+            currentAsignatura = { ...asignatura };
+            formMode = 'edit';
+            document.getElementById('modal-title').textContent = 'Editar Asignatura';
+            document.getElementById('codigo').disabled = true;
+            document.getElementById('codigo').value = asignatura.codigo;
+            document.getElementById('nombre').value = asignatura.nombre;
+            document.getElementById('creditos').value = asignatura.creditos;
+            document.getElementById('descripcion').value = asignatura.descripcion;
+            openModal();
+        }
+
+        // Función para abrir el modal
+        function openModal() {
+            document.getElementById('modal').classList.add('active');
+        }
+
+        // Función para cerrar el modal
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Función para manejar la creación o actualización de asignaturas
+        async function handleSubmit(e) {
+            e.preventDefault();
+
+            if (formMode === 'create') {
+                // Simulación de crear asignatura
+                asignaturas.push(currentAsignatura);
+                alert('Asignatura creada correctamente');
+            } else {
+                // Simulación de actualizar asignatura
+                const index = asignaturas.findIndex(a => a.codigo === currentAsignatura.codigo);
+                if (index !== -1) {
+                    asignaturas[index] = currentAsignatura;
+                    alert('Asignatura actualizada correctamente');
+                }
+            }
+
+            renderAsignaturas();
+            closeModal();
+        }
+
+        // Función para eliminar asignatura
+        function handleDelete(codigo) {
+            if (confirm('¿Está seguro que desea eliminar esta asignatura?')) {
+                asignaturas = asignaturas.filter(a => a.codigo !== codigo);
+                alert('Asignatura eliminada correctamente');
+                renderAsignaturas();
+            }
+        }
+
+        // Inicializar
+        document.getElementById('form').addEventListener('submit', handleSubmit);
+        loadAsignaturas();
+    </script>
+</body>
+</html>
